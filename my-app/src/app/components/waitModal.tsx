@@ -12,7 +12,7 @@ const WaitModal: React.FC<WaitModalProps> = ({ isOpen, onClose }) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
-            <div className="relative w-[90%] max-w-[800px] h-[600px] bg-gray-800 bg-opacity-80 backdrop-blur-md p-8 rounded-xl flex flex-col justify-center items-center">
+            <div className="relative w-[90%] max-w-[800px] h-[450px] bg-gray-800 bg-opacity-80 backdrop-blur-md p-8 rounded-xl flex flex-col justify-center items-center">
                 {/* Close Button */}
                 <button
                     onClick={onClose}
@@ -24,7 +24,7 @@ const WaitModal: React.FC<WaitModalProps> = ({ isOpen, onClose }) => {
                 {/* Modal Content */}
                 <div className="flex flex-col items-center">
                     <img
-                        src="homebg.jpg"
+                        src="mulbg.jpeg"
                         alt="Multiplayer"
                         className="w-[500px] h-auto rounded-lg shadow-lg" // Image with rounded corners and shadow
                     />
