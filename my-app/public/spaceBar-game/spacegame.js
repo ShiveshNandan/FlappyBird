@@ -1,11 +1,16 @@
 const cvs = document.getElementById("spacebar");
 const ctx = cvs.getContext("2d");
 
+const bgImage = new Image();
+bgImage.src = 'img/gamebg2.jpg';
+
 let frames = 0;
 const DEGREE = Math.PI / 180;
 
 const sprite = new Image();
 sprite.src = "img/sprite1.png";
+
+
 
 const state = {
     current: 0,
@@ -15,7 +20,7 @@ const state = {
 }
 
 const restartBtn = {
-    x: 300,
+    x: 500,
     y: 310,
     w: 93,
     h: 50
@@ -51,6 +56,7 @@ cvs.addEventListener("click", function (evt) {
 });
 
 
+
 const wallup = {
     sX: 0,
     sY: 232,
@@ -68,6 +74,8 @@ const wallup = {
         ctx.drawImage(sprite, this.sX, this.sY, this.w, this.h, this.x + this.wd, this.y, this.wd, this.hd);
         ctx.drawImage(sprite, this.sX, this.sY, this.w, this.h, this.x + this.wd + this.wd, this.y, this.wd, this.hd);
         ctx.drawImage(sprite, this.sX, this.sY, this.w, this.h, this.x + this.wd + this.wd + this.wd, this.y, this.wd, this.hd);
+        ctx.drawImage(sprite, this.sX, this.sY, this.w, this.h, this.x + this.wd + this.wd + this.wd + this.wd, this.y, this.wd, this.hd);
+        ctx.drawImage(sprite, this.sX, this.sY, this.w, this.h, this.x + this.wd + this.wd + this.wd + this.wd + this.wd, this.y, this.wd, this.hd);
 
     },
 
@@ -86,9 +94,9 @@ const walldown = {
     w: 1382,
     h: 173,
     x: 0,
-    y: cvs.height - 50,
+    y: cvs.height - 80,
     wd: 240,
-    hd: 50,
+    hd: 80,
 
     dx: 2,
 
@@ -97,6 +105,8 @@ const walldown = {
         ctx.drawImage(sprite, this.sX, this.sY, this.w, this.h, this.x + this.wd, this.y, this.wd, this.hd);
         ctx.drawImage(sprite, this.sX, this.sY, this.w, this.h, this.x + this.wd + this.wd, this.y, this.wd, this.hd);
         ctx.drawImage(sprite, this.sX, this.sY, this.w, this.h, this.x + this.wd + this.wd + this.wd, this.y, this.wd, this.hd);
+        ctx.drawImage(sprite, this.sX, this.sY, this.w, this.h, this.x + this.wd + this.wd + this.wd + this.wd, this.y, this.wd, this.hd);
+        ctx.drawImage(sprite, this.sX, this.sY, this.w, this.h, this.x + this.wd + this.wd + this.wd + this.wd + this.wd, this.y, this.wd, this.hd);
     },
 
     update: function () {
@@ -244,7 +254,9 @@ const lazer = {
     hd: 310,
     gap: 120,
     maxYPos: -100,
-    dx: 2,
+    dx: 2, // Initial speed
+    speedIncrement: 0.003,
+    maxSpeed: 10,
 
     draw: function () {
         for (let i = 0; i < this.position.length; i++) {
@@ -264,12 +276,15 @@ const lazer = {
     update: function () {
         if (state.current !== state.game) return;
 
-        if (frames % 100 == 0) {
+        this.dx = Math.min(this.dx + this.speedIncrement, this.maxSpeed);
+        if (frames % 80 == 0) {
             this.position.push({
                 x: cvs.width,
                 y: this.maxYPos * (Math.random() + 1)
             });
         }
+
+
         for (let i = 0; i < this.position.length; i++) {
             let p = this.position[i];
 
@@ -303,6 +318,7 @@ const lazer = {
 
     reset: function () {
         this.position = [];
+        dx = 2;
     }
 
 }
@@ -319,29 +335,29 @@ const score = {
         if (state.current == state.game) {
             ctx.lineWidth = 2;
             ctx.font = "35px Teko";
-            ctx.fillText(this.value, cvs.width / 2, 50);
-            ctx.strokeText(this.value, cvs.width / 2, 50);
+            ctx.fillText(this.value, cvs.width / 2, 100);
+            ctx.strokeText(this.value, cvs.width / 2, 100);
 
         } else if (state.current == state.over) {
             // SCORE VALUE
             ctx.font = "25px Teko";
 
             // Draw "Score:" label
-            ctx.fillText("Score ", 175, 186);
-            ctx.strokeText("Score ", 175, 186);
+            ctx.fillText("Score ", 325, 186);
+            ctx.strokeText("Score ", 325, 186);
 
             // Draw the actual score value
-            ctx.fillText(this.value, 250, 186);
-            ctx.strokeText(this.value, 250, 186);
+            ctx.fillText(this.value, 400, 186);
+            ctx.strokeText(this.value, 400, 186);
 
             // BEST SCORE
             // Draw "Best:" label
-            ctx.fillText("Best ", 470, 186);
-            ctx.strokeText("Best ", 470, 186);
+            ctx.fillText("Best ", 700, 186);
+            ctx.strokeText("Best ", 700, 186);
 
             // Draw the best score value
-            ctx.fillText(this.best, 545, 186);
-            ctx.strokeText(this.best, 545, 186);
+            ctx.fillText(this.best, 775, 186);
+            ctx.strokeText(this.best, 775, 186);
         }
 
     },
@@ -354,14 +370,11 @@ const score = {
 
 
 function draw() {
-    const gradient = ctx.createLinearGradient(0, 0, cvs.width, cvs.height);
-    gradient.addColorStop(0, "#0a0f0f");
-    gradient.addColorStop(0.5, "#1c3d4d");
-    gradient.addColorStop(1, "#040d0d");
 
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, cvs.width, cvs.height);
-
+    ctx.clearRect(0, 0, cvs.width, cvs.height);
+    ctx.globalAlpha = 0.5;
+    ctx.drawImage(bgImage, 0, 0, cvs.width, cvs.height);
+    ctx.globalAlpha = 1.0;
 
     lazer.draw();
     wallup.draw();
